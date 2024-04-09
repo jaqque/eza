@@ -1,0 +1,9 @@
+---
+
+name: eza
+
+services:
+  eza:
+    build:
+      dockerfile: Containerfile
+      context: .
