@@ -34,9 +34,7 @@ ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/nonexistent" \
     --shell "/sbin/nologin" \
-    --no-create-home \
     --uid "${UID}" \
     builduser
 USER builduser
@@ -60,7 +58,6 @@ RUN cd rust \
 # build eza
 RUN cd eza \
  && PATH=$PATH:/build/rust/build/aarch64-unknown-linux-gnu/stage0/bin cargo install --path .
-# installs to /root/.cargo/bin/eza
-# installs to ?? given --no-create-home
+# installs to /home/builduser/.cargo/bin/eza
 
 CMD ["/bin/bash"]
