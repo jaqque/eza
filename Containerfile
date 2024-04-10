@@ -2,13 +2,6 @@ ARG DEBIAN_RELEASE=bookworm-20240311-slim
 # Debian 12.5
 FROM docker.io/library/debian:$DEBIAN_RELEASE
 
-ARG RUST_REPO=https://github.com/rust-lang/rust.git
-ARG RUST_TAG=1.77.1
-ARG RUST_PROFILE=compiler
-
-ARG EZA_REPO=https://github.com/eza-community/eza.git
-ARG EZA_TAG=v0.18.9
-
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install \
@@ -41,6 +34,10 @@ USER builduser
 
 WORKDIR /build
 # clone repos
+ARG RUST_REPO=https://github.com/rust-lang/rust.git
+ARG RUST_TAG=1.77.1
+ARG EZA_REPO=https://github.com/eza-community/eza.git
+ARG EZA_TAG=v0.18.9
 RUN git clone \
       -c advice.detachedHead=false \
       --depth 1 \
@@ -51,10 +48,13 @@ RUN git clone \
       --depth 1 \
       --branch "$EZA_TAG" \
       "$EZA_REPO"
+
 # build rust compiler (eza needs rustc > 1.70.0 or something
+ARG RUST_PROFILE=compiler
 RUN cd rust \
  && printf 'profile = "%s"\nchange-id = 102579\n' "$RUST_PROFILE" > config.toml \
  && ./x build
+
 # build eza
 RUN cd eza \
  && PATH=$PATH:/build/rust/build/aarch64-unknown-linux-gnu/stage0/bin cargo install --path .
