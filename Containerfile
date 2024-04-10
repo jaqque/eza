@@ -13,14 +13,14 @@ RUN apt-get update \
       g++ \
       git \
       libpython3-stdlib \
+      libssl-dev \
       make \
       ninja-build \
+      pkg-config \
       python3-minimal \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
-# pkg-config   for profile=dist
-# libssl-dev
-# rustc builds *slowly* - took 3+hours to fail a build
+# rustc (dist profile) builds *slowly* on a pi5 - took 3+hours to fail a build
 
 # shamelessly stolen from "docker init"
 ARG UID=10001
